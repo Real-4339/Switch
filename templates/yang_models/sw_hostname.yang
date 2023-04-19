@@ -1,0 +1,10 @@
+module sw_hostname {
+    namespace "urn:sw-hostname";
+    prefix "hostname";
+
+    container switch {
+        leaf hostname {
+            type string;
+        }
+    }
+}

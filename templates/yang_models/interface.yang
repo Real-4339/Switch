@@ -1,0 +1,17 @@
+module interface {
+    namespace "urn:interface";
+    prefix "state";
+
+    container interfaces {
+        list interface-entry {
+            key "name";
+            
+            leaf name {
+                type string;
+            }
+            leaf state {
+                type string;
+            }
+        }
+    }
+}

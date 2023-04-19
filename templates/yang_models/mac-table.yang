@@ -1,0 +1,29 @@
+module mac-table {
+    namespace "urn:mac-table";
+    prefix "mac-table";
+
+    container mac {
+        
+        list mac-entry {
+            key "mac-address";
+
+            leaf mac-address {
+                type string;
+            }
+
+            leaf timer {
+                type uint32;
+            }
+
+            leaf port {
+                type string;
+            }
+
+            leaf last-seen {
+                type uint64;
+                description "The Unix timestamp when the MAC address was last seen";
+            }
+        }
+
+    }
+}
