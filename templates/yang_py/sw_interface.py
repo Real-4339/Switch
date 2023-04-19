@@ -71,6 +71,8 @@ class yc_interface_entry_interface__interfaces_interface_entry(PybindBase):
   def _get_name(self):
     """
     Getter method for name, mapped from YANG variable /interfaces/interface_entry/name (string)
+
+    YANG Description: Name of the interface
     """
     return self.__name
       
@@ -81,6 +83,8 @@ class yc_interface_entry_interface__interfaces_interface_entry(PybindBase):
     source YANG file, then _set_name is considered as a private
     method. Backends looking to populate this variable should
     do so via calling thisObj._set_name() directly.
+
+    YANG Description: Name of the interface
     """
     parent = getattr(self, "_parent", None)
     if parent is not None and load is False:
@@ -109,6 +113,8 @@ class yc_interface_entry_interface__interfaces_interface_entry(PybindBase):
   def _get_state(self):
     """
     Getter method for state, mapped from YANG variable /interfaces/interface_entry/state (string)
+
+    YANG Description: State of the interface
     """
     return self.__state
       
@@ -119,6 +125,8 @@ class yc_interface_entry_interface__interfaces_interface_entry(PybindBase):
     source YANG file, then _set_state is considered as a private
     method. Backends looking to populate this variable should
     do so via calling thisObj._set_state() directly.
+
+    YANG Description: State of the interface
     """
     if hasattr(v, "_utype"):
       v = v._utype(v)

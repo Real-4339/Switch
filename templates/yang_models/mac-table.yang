@@ -2,6 +2,10 @@ module mac-table {
     namespace "urn:mac-table";
     prefix "mac-table";
 
+    import interface {
+        prefix "if";
+    }
+
     container mac {
         
         list mac-entry {
@@ -9,14 +13,19 @@ module mac-table {
 
             leaf mac-address {
                 type string;
+                description "The MAC address";
             }
 
             leaf timer {
                 type uint32;
+                description "The timer value";
             }
 
             leaf port {
-                type string;
+                type leafref {
+                    path "/if:interfaces/if:interface-entry/if:name";
+                }
+                description "The port on which the MAC address was last seen";
             }
 
             leaf last-seen {

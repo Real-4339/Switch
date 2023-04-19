@@ -8,9 +8,11 @@ module interface {
             
             leaf name {
                 type string;
+                description "Name of the interface";
             }
             leaf state {
                 type string;
+                description "State of the interface";
             }
         }
     }
