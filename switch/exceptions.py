@@ -14,3 +14,7 @@ class InterfaceDoesNotExist(Exception):
 class InvalidState(Exception):
     def __init__(self):
         super().__init__('Invalid state')
+
+class MacAddressDoesNotExist(Exception):
+    def __init__(self):
+        super().__init__('MAC address does not exist')

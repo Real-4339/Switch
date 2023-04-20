@@ -1,37 +1,41 @@
+from typing import OrderedDict
 from templates.yang_py import sw_interface
+from exceptions import InterfaceDoesNotExist, InvalidState
 
 
 class InterfaceManager:
     def __init__(self):
-        self.__interface_container = sw_interface.interface()
+        self.__interface_container = sw_interface.interface().interfaces
 
     def add_interface(self, interface_name: str) -> None:
-        new_interface = self.__interface_container.interfaces.add(interface_name)
+        new_interface = self.__interface_container.interface_entry.add(interface_name)
         new_interface.state = "down"
 
     def remove_interface(self, interface_name: str) -> None:
         try:
-            self.__interface_container.interfaces.remove(interface_name)
+            self.__interface_container.interface_entry.remove(interface_name)
         except AttributeError:
-            raise ValueError("Interface does not exist")
-
-    def get_interface(self, interface_name: str) -> sw_interface.interface.interfaces:
+            raise InterfaceDoesNotExist
+        
+    def get_interface(self, interface_name: str) -> OrderedDict:
         try:
-            return self.__interface_container.interfaces[interface_name]
+            return self.__interface_container.interface_entry[interface_name]
         except AttributeError:
-            raise ValueError("Interface does not exist")
+            raise InterfaceDoesNotExist
 
     def get_interfaces(self):
-        return self.__interface_container.interfaces
+        return self.__interface_container
     
     def update_interface_name(self, old_name: str, new_name: str) -> None:
-        if old_name not in self.__interface_container.interfaces:
-            raise ValueError("Interface does not exist")
-        self.__interface_container.interfaces[old_name].name = new_name
+        if old_name not in self.__interface_container.interface_entry:
+            raise InterfaceDoesNotExist
+        self.__interface_container.interface_entry.remove(old_name)
+        new_interface = self.__interface_container.interface_entry.add(new_name)
+        new_interface.state = "down"
 
     def update_interface_state(self, interface_name: str, state: str) -> None:
         if state not in ["up", "down"]:
-            raise ValueError("Invalid state")
-        if interface_name not in self.__interface_container.interfaces:
-            raise ValueError("Interface does not exist")
-        self.__interface_container.interfaces[interface_name].state = state
+            raise InvalidState
+        if interface_name not in self.__interface_container.interface_entry:
+            raise InterfaceDoesNotExist
+        self.__interface_container.interface_entry[interface_name].state = state
