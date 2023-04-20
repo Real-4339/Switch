@@ -40,8 +40,8 @@ class yc_mac_entry_mac_table__mac_mac_entry(PybindBase):
     self._extmethods = False
     self.__mac_address = YANGDynClass(base=six.text_type, is_leaf=True, yang_name="mac-address", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, is_keyval=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='string', is_config=True)
     self.__timer = YANGDynClass(base=RestrictedClassType(base_type=long, restriction_dict={'range': ['0..4294967295']}, int_size=32), is_leaf=True, yang_name="timer", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint32', is_config=True)
-    self.__port = YANGDynClass(base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='leafref', is_config=True)
-    self.__last_seen = YANGDynClass(base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last-seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)
+    self.__port = YANGDynClass(base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='string', is_config=True)
+    self.__last_seen = YANGDynClass(base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last_seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)
 
     load = kwargs.pop("load", None)
     if args:
@@ -151,31 +151,31 @@ class yc_mac_entry_mac_table__mac_mac_entry(PybindBase):
 
   def _get_port(self):
     """
-    Getter method for port, mapped from YANG variable /mac/mac_entry/port (leafref)
+    Getter method for port, mapped from YANG variable /mac/mac_entry/port (string)
 
-    YANG Description: The port on which the MAC address was last seen
+    YANG Description: The port the MAC address is associated with
     """
     return self.__port
       
   def _set_port(self, v, load=False):
     """
-    Setter method for port, mapped from YANG variable /mac/mac_entry/port (leafref)
+    Setter method for port, mapped from YANG variable /mac/mac_entry/port (string)
     If this variable is read-only (config: false) in the
     source YANG file, then _set_port is considered as a private
     method. Backends looking to populate this variable should
     do so via calling thisObj._set_port() directly.
 
-    YANG Description: The port on which the MAC address was last seen
+    YANG Description: The port the MAC address is associated with
     """
     if hasattr(v, "_utype"):
       v = v._utype(v)
     try:
-      t = YANGDynClass(v,base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='leafref', is_config=True)
+      t = YANGDynClass(v,base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='string', is_config=True)
     except (TypeError, ValueError):
       raise ValueError({
-          'error-string': """port must be of a type compatible with leafref""",
-          'defined-type': "leafref",
-          'generated-type': """YANGDynClass(base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='leafref', is_config=True)""",
+          'error-string': """port must be of a type compatible with string""",
+          'defined-type': "string",
+          'generated-type': """YANGDynClass(base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='string', is_config=True)""",
         })
 
     self.__port = t
@@ -183,7 +183,7 @@ class yc_mac_entry_mac_table__mac_mac_entry(PybindBase):
       self._set()
 
   def _unset_port(self):
-    self.__port = YANGDynClass(base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='leafref', is_config=True)
+    self.__port = YANGDynClass(base=six.text_type, is_leaf=True, yang_name="port", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='string', is_config=True)
 
 
   def _get_last_seen(self):
@@ -207,12 +207,12 @@ class yc_mac_entry_mac_table__mac_mac_entry(PybindBase):
     if hasattr(v, "_utype"):
       v = v._utype(v)
     try:
-      t = YANGDynClass(v,base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last-seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)
+      t = YANGDynClass(v,base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last_seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)
     except (TypeError, ValueError):
       raise ValueError({
           'error-string': """last_seen must be of a type compatible with uint64""",
           'defined-type': "uint64",
-          'generated-type': """YANGDynClass(base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last-seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)""",
+          'generated-type': """YANGDynClass(base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last_seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)""",
         })
 
     self.__last_seen = t
@@ -220,7 +220,7 @@ class yc_mac_entry_mac_table__mac_mac_entry(PybindBase):
       self._set()
 
   def _unset_last_seen(self):
-    self.__last_seen = YANGDynClass(base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last-seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)
+    self.__last_seen = YANGDynClass(base=RestrictedClassType(base_type=long, restriction_dict={'range':  ['0..18446744073709551615']}, int_size=64), is_leaf=True, yang_name="last_seen", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='urn:mac-table', defining_module='mac-table', yang_type='uint64', is_config=True)
 
   mac_address = __builtin__.property(_get_mac_address, _set_mac_address)
   timer = __builtin__.property(_get_timer, _set_timer)

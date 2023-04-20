@@ -1,6 +1,6 @@
 module interface {
     namespace "urn:interface";
-    prefix "state";
+    prefix "if";
 
     container interfaces {
         list interface-entry {
