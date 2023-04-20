@@ -9,7 +9,7 @@ from exceptions import InterfaceDoesNotExist, InvalidState
 class InterfaceManager:
     def __init__(self):
         self.__interface_container = sw_interface.interface().interfaces
-
+    
     def boot(self) -> None:
         for interface in psutil.net_if_addrs():
             new_interface = self.__interface_container.interface_entry.add(interface)
@@ -55,3 +55,7 @@ class InterfaceManager:
         if interface_name not in self.__interface_container.interface_entry:
             raise InterfaceDoesNotExist
         return pybindJSON.dumps(self.__interface_container.interface_entry[interface_name])
+    
+    def shutdown(self) -> None:
+        for interface in self.__interface_container.interface_entry:
+            self.__interface_container.interface_entry[interface].state = "down"
