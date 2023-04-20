@@ -10,7 +10,7 @@ class InterfaceManager:
     def __init__(self):
         self.__interface_container = sw_interface.interface().interfaces
 
-    def __boot(self) -> None:
+    def boot(self) -> None:
         for interface in psutil.net_if_addrs():
             new_interface = self.__interface_container.interface_entry.add(interface)
             new_interface.state = "down"
