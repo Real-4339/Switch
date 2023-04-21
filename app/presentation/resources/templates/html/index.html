@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="selectInterface">
+            <select name="interface1" id="interface1">
+                {% for interface in interfaces %}
+                <option value="{{ interface }}">{{ interface }}</option>
+                {% endfor %}
+            </select>
+           <select name="interface2" id="interface2">
+                {% for interface in interfaces %}
+                <option value="{{ interface }}">{{ interface }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="activation--buttons">
+            <button class="activation--buttons--start" onclick="sendSignal('start')">Start</button>
+            <button class="activation--buttons--stop" onclick="sendSignal('stop')">Stop</button>
+            <button class="activation--buttons--refresh" onclick="sendSignal('refresh')">Refresh</button>
+        </div>
+    </header>
+    <div class="syslogClientSetup">
+        <h2>Syslog Client</h2>
+        <div class="syslogClientSetup--content">
+            <div class="syslogClientSetup--server">
+                <label for="serverIp">Server IP</label>
+                <input type="text" name="serverIp" id="serverIp">
+            </div>
+            <div class="syslogClientSetup--client">
+                <label for="clientIp">Client IP</label>
+                <input type="text" name="clientIp" id="clientIp">
+            </div>
+            <div class="syslogClientSetup--radio">
+                <input type="radio" name="radio" id="radio1" value="radio1">
+                <label for="radio1">Radio 1</label>
+            </div>
+            <div class="syslogClientSetup--radio">
+                <input type="radio" name="radio" id="radio2" value="radio2">
+                <label for="radio2">Radio 2</label>
+            </div>
+        </div>
+        <div class="syslogClientSetup--start--wrapper">
+            <button class="syslogClientSetup--start" onclick="sendFormData()">Start</button>
+        </div>
+    </div>
+    <div class="packageAnalysis">
+        <h2>Package Analysis</h2>
+        <div class="packageAnalysis--content">
+            <div class="packageAnalysis--content--left">
+                <h3>Caption</h3>
+                <table>
+                    <tr>
+                        <th>IN</th>
+                        <th>OUT</th>
+                    </tr>
+                    {% for item in port1 %}
+                        <tr>
+                            <td><textarea class="inOutInput">{{ item.value1 }}</textarea></td>
+                            <td><textarea class="inOutInput">{{ item.value2 }}</textarea></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <div class="packageAnalysis--content--left--controls">
+                    <button class="packageAnalysis--content--left--buttons--reset" onclick="resetPortInfo('left')">Reset</button>
+                </div>
+            </div>
+            <div class="packageAnalysis--content--center">
+                <h3>MAC TABLE</h3>
+                <table>
+                    <colgroup>
+                        <col style="width: 19%">
+                        <col style="width: 60%">
+                        <col style="width: 90%">
+                    </colgroup>
+                    <tr>
+                        <th class="mac">MAC Address</th>
+                        <th class="mac">Timer</th>
+                        <th class="mac">Port</th>
+                    </tr>
+                    {% for item in macTable %}
+                    <tr>
+                        <td colspan="3"><textarea class="inOutTextarea" scrolling-input>{{ item.tables }}</textarea></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <div class="packageAnalysis--content--center--controls">
+                    <button class="packageAnalysis--content--center--buttons--clear" onclick="clearMAC()">Clear</button>
+                    <button class="packageAnalysis--content--center--buttons--push" onclick="pushNewTimer()">Push</button>
+                    <input type="number" name="pushNumber" id="pushNumber" value="8">
+                </div>
+            </div>
+            <div class="packageAnalysis--content--right">
+                <h3>Caption</h3>
+                <table>
+                    <tr>
+                        <th>IN</th>
+                        <th>OUT</th>
+                    </tr>
+                    {% for item in port2 %}
+                    <tr>
+                        <td><textarea class="inOutInput">{{ item.value1 }}</textarea></td>
+                        <td><textarea class="inOutInput">{{ item.value2 }}</textarea></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <div class="packageAnalysis--content--right--controls">
+                    <button class="packageAnalysis--content--right--buttons--reset" onclick="resetPortInfo('right')">Reset</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="restconf">
+        <h2>RESTCONF</h2>
+        <div class="restconf--content">
+            <label for="postResponse">Response</label>
+            <textarea name="postResponse" id="postResponse" cols="30" rows = "20"></textarea>
+        </div>
+    </div>
+    <script>
+        var socket = new WebSocket("ws://" + window.location.host + "/ws");
+        socket.onopen = function(event) {
+            socket.send(JSON.stringify({type: "hello", message: "Hello, server!"}));
+        };
+        socket.onmessage = function(event) {
+            let data = JSON.parse(event.data);
+            if (data.type === "updatePort") {
+                updatePort(data.port, data.list);
+            } else if (data.type === "updateMacTable") {
+                updateMacTable(data.macTable);
+            } else if (data.type === "addToMacTable") {
+                addToMacTable(data.macTable);
+            } else if (data.type === "updateSyslogClient") {
+                updateSyslogClient(data.syslogClient);
+            }
+        };
+        function addToMacTable(macTable) {
+            const macTableElement = document.getElementsByClassName("packageAnalysis--content--center")[0];
+            const macTableTextareas = macTableElement.querySelectorAll('.inOutTextarea');
+            const macTableTextarea = macTableTextareas[0];
+            let value = macTableTextarea.value;
+            value += JSON.stringify(macTable) + "\n";
+        }
+        function updateMacTable(macTable) {
+            const macTableElement = document.getElementsByClassName("packageAnalysis--content--center")[0];
+            const macTableTextareas = macTableElement.querySelectorAll('.inOutTextarea');
+            const macTableTextarea = macTableTextareas[0];
+            macTableTextarea.value = JSON.stringify(macTable);
+            
+        }
+        function updatePort(port, dict) {
+            let portElement;
+            let value1Text = "";
+            let value2Text = "";
+          
+            if (port === "port1") {
+              portElement = document.getElementsByClassName("packageAnalysis--content--left")[0];
+            } else if (port === "port2") {
+              portElement = document.getElementsByClassName("packageAnalysis--content--right")[0];
+            }
+          
+            for (const obj of dict[0].value1) {
+            value1Text += JSON.stringify(obj) + "\n";
+            }
+        
+            for (const obj of dict[0].value2) {
+            value2Text += JSON.stringify(obj) + "\n";
+            }
+            
+
+            const textareas = portElement.querySelectorAll('.inOutInput:nth-child(2n-1)');
+            const value1Textareas = textareas[0]
+            const value2Textareas = textareas[1]
+
+            // Update the textareas
+            value1Textareas.value = value1Text;
+            value2Textareas.value = value2Text;
+          }
+          
+        function updateInterfaces(interfaces){
+            console.log("Interfaces updated");
+            // Update the interface options
+            let interface1Select = document.getElementById("interface1");
+            let interface2Select = document.getElementById("interface2");
+            interface1Select.innerHTML = "";
+            interface2Select.innerHTML = "";
+            interfaces.forEach(interface => {
+                let option = document.createElement("option");
+                option.value = interface;
+                option.text = interface;
+                interface1Select.add(option.cloneNode(true));
+                interface2Select.add(option);
+            });
+        }
+        function sendSignal(event) {
+            let interface1Select = document.getElementById("interface1");
+            let interface2Select = document.getElementById("interface2");
+            let interface1Value = interface1Select.options[interface1Select.selectedIndex].value;
+            let interface2Value = interface2Select.options[interface2Select.selectedIndex].value;
+            fetch("/events", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "event": String(event),
+                    "interface1": interface1Value,
+                    "interface2": interface2Value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+               if (data.interfaces){
+                    updateInterfaces(data.interfaces);
+                }
+            })
+            .catch(error => console.error(error));
+        }
+        function resetPortInfo(port) {
+            let portElement = document.getElementsByClassName("packageAnalysis--content--" + port)[0];
+            const textareas = portElement.querySelectorAll('.inOutInput:nth-child(2n-1)');
+            const value1Textareas = textareas[0]
+            const value2Textareas = textareas[1]
+            value1Textareas.value = "";
+            value2Textareas.value = "";
+        }
+        function clearMAC() {
+            const macTableElement = document.getElementsByClassName("packageAnalysis--content--center")[0];
+            const macTableTextareas = macTableElement.querySelectorAll('.inOutTextarea');
+            const macTableTextarea = macTableTextareas[0];
+            macTableTextarea.value = "";
+        }
+        function pushNewTimer() {
+            const pushNumber = document.getElementById("pushNumber").value;
+            console.log(pushNumber);
+            fetch("/timer", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "timer": pushNumber
+                })
+            })
+            .then(response => response.json())
+            .then(data => { console.log(data) })
+            .catch(error => console.error(error));
+        }
+    </script>
+</body>
+</html>

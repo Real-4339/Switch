@@ -45,7 +45,7 @@ Install pyangbind and pyang:
 pip install pyang pyangbind
 ```
 
-To create python classes based on yang models, run:
+To create python classes based on yang models, run from project directory:
 ```bash
 export PYBINDPLUGIN=`path/to/project/env/bin/python -c \
 > 'import pyangbind; import os; print ("{}/plugin".format(os.path.dirname(pyangbind.__file__)))'`

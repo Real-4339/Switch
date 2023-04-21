@@ -1,0 +1,385 @@
+/* 
+NORD COLORS:
+
+Polar Night
+#2E3440
+#3B4252
+#434C5E
+#4C566A
+
+Snow Storm
+#D8DEE9
+#E5E9F0
+#ECEFF4
+
+Frost
+#8FBCBB
+#88C0D0
+#81A1C1
+#5E81AC
+
+Aurora
+#BF616A
+#D08770
+#EBCB8B
+#A3BE8C
+#B48EAD
+*/
+
+:root {
+    --nord-night1: #2E3440;
+    --nord-night2: #3B4252;
+    --nord-night3: #434C5E;
+    --nord-night4: #4C566A;
+    --nord-white1: #D8DEE9;
+    --nord5-white2: #E5E9F0;
+    --nord6-white3: #ECEFF4;
+    --nord-green1: #8FBCBB;
+    --nord-blue2: #88C0D0;
+    --nord-blue3: #81A1C1;
+    --nord-blue4: #5E81AC;
+    --nord-red: #BF616A;
+    --nord-orange: #D08770;
+    --nord-yellow: #EBCB8B;
+    --nord-green2: #A3BE8C;
+    --nord-purple: #B48EAD;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--nord-night2);
+    color: var(--nord-white1);
+    font-family: 'Golos Text', sans-serif;
+}
+
+header {
+    background-color: var(--nord-night1);
+    padding: 10px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+select {
+    background-color: var(--nord-night1);
+    color: var(--nord-white1);
+    border: none;
+    padding: 5px;
+    margin: 0 10px;
+}
+
+select:active {
+    border: none;
+    background-color: var(--nord-night2);
+}
+
+option {
+    background-color: var(--nord-night1);
+    color: var(--nord-white1);
+}
+
+.selectInterface {
+    display: flex;
+    justify-content: space-between;
+}
+.selectInterface select {
+    margin: 0 10px;
+}
+
+.activation--buttons button {
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 25px;
+    margin: 0 10px;
+    padding: 10px;
+}
+
+.activation--buttons button:hover {
+    border: none;
+    opacity: 0.8;
+}
+
+.activation--buttons button:active {
+    border: none;
+    background-color: var(--nord-night4);
+    color: var(--nord-white1);
+}
+
+.activation--buttons--start {
+    background-color: var(--nord-green2);
+}
+
+.activation--buttons--stop {
+    background-color: var(--nord-red);
+}
+
+.activation--buttons--refresh {
+    background-color: var(--nord-orange);
+}
+
+.syslogClientSetup {
+    background-color: var(--nord-night1);
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 25px;
+}
+
+.syslogClientSetup h2 {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.syslogClientSetup input {
+    background-color: var(--nord-white1);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 25px;
+    padding: 5px;
+    margin: 0 10px;
+}
+
+.syslogClientSetup--content {
+    margin: 0;
+    margin-bottom: 20px;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-items: center;
+}
+
+.syslogClientSetup--server input:active {
+    border: none;
+}
+
+.syslogClientSetup--start--wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.syslogClientSetup--start {
+    background-color: var(--nord-green2);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 25px;
+    margin: 0 10px;
+    padding: 10px;
+    width: 20%;
+}
+
+.syslogClientSetup--start:hover {
+    border: none;
+    opacity: 0.8;
+}
+
+.syslogClientSetup--start:active {
+    border: none;
+    background-color: var(--nord-night4);
+    color: var(--nord-white1);
+}
+
+
+.packageAnalysis {
+    background-color: var(--nord-night1);
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 25px;
+}
+
+.packageAnalysis h2 {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.packageAnalysis--content {
+    margin: 0;
+    margin-bottom: 20px;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-items: center;
+}
+
+.packageAnalysis--content h3 {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* margin-bottom: 20px; */
+    text-align: center;
+}
+
+.inOutInput {
+    background-color: var(--nord-white1);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0;
+    width: 12vw;
+    height: 200px;
+}
+
+.inOutInput:active {
+    border: none;
+}
+
+.inOutTextarea {
+    background-color: var(--nord-white1);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0;
+    width: 100%;
+    height: 150px; /* Set a fixed height */
+    overflow-y: scroll; /* Enable scrolling */
+}
+
+.inOutTextarea:active {
+    border: none;
+}
+
+.scrolling-input-container {
+    overflow: auto;
+    height: 150px; /* set the desired height of the input container */
+  }
+
+.mac {
+    padding: 0px 10px 10px 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.packageAnalysis--content--center {
+    background-color: var(--nord-night3);
+    padding: 10px;
+    border-radius: 25px;
+}
+
+.packageAnalysis--content--center--controls {
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+    padding: 10px;
+    height: 3vh;
+}
+
+.packageAnalysis--content--center--buttons--clear {
+    background-color: var(--nord-red);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 10px;
+    margin: 0 10px;
+}
+
+.packageAnalysis--content--center--buttons--clear:hover {
+    border: none;
+    opacity: 0.8;
+}
+
+.packageAnalysis--content--center--buttons--clear:active {
+    border: none;
+    background-color: var(--nord-night4);
+    color: var(--nord-white1);
+}
+
+.packageAnalysis--content--center--buttons--push {
+    background-color: var(--nord-green2);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 10px;
+    margin: 0 10px;
+}
+
+.packageAnalysis--content--center--buttons--push:hover {
+    border: none;
+    opacity: 0.8;
+}
+
+.packageAnalysis--content--center--buttons--push:active {
+    border: none;
+    background-color: var(--nord-night4);
+    color: var(--nord-white1);
+}
+
+.packageAnalysis--content--center--controls input {
+    background-color: var(--nord-white1);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0;
+    width: 12vw;
+}
+
+.packageAnalysis--content--center--controls button {
+    width: 12vw;
+}
+
+.packageAnalysis--content--left--controls {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    padding: 10px;
+    height: 3vh;
+}
+
+.packageAnalysis--content--left--buttons--reset {
+    background-color: var(--nord-red);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.packageAnalysis--content--right--controls {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    padding: 10px;
+    height: 3vh;
+}
+
+.packageAnalysis--content--right--buttons--reset {
+    background-color: var(--nord-red);
+    color: var(--nord-night1);
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.restconf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.restconf--content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 40px;
+    width: 90%;
+}
+
+.restconf textarea {
+    width: 100%;
+    max-width: 800px; /* Set a maximum width to prevent the textarea from becoming too wide */
+  }
