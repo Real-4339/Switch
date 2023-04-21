@@ -4,6 +4,8 @@ from .mac import MacTable
 from .console import Console
 from .sniffer import Sniffer
 from scapy.packet import Packet
+from scapy.sendrecv import sendp
+from scapy.layers.l2 import Ether
 from .inter_mg import InterfaceManager
 from .exceptions import SwitchIsActive, SwitchIsNotActive, InterfaceDoesNotExist
 
@@ -49,11 +51,33 @@ class Switch:
     def console(self) -> Console:
         return self.__console
     
+    @property
+    def working_interfaces(self) -> dict[str, Sniffer]:
+        return self.__working_interfaces
+    
+    def __send_packet(self, packet: Packet, inter_from: str) -> None:
+        
+        if packet[Ether].dst in self.__mac_table.entries:
+            interface = self.__mac_table.entries[packet[Ether].dst].port.name
+            sendp(packet, iface=interface, verbose=False)
+        else:
+            for interface in self.__working_interfaces:
+                if interface != inter_from:
+                    sendp(packet, iface=interface, verbose=False)
+
+        log.info(f'Packet to {interface} is sent')
+
     def __packet_handler(self, interface: str, packet: Packet) -> None:
         log.info(f'Packet from {interface} is received')
-
-        self.__mac_table.add_or_update_entry(packet.src, interface)
+        
+        if not packet.getlayer(Ether):
+            log.info('Packet is not Ethernet')
+            return
+        
+        self.__mac_table.add_or_update_entry(packet[Ether].src, interface)
         self.__mac_table.update()
+
+        self.__send_packet(packet, interface)
 
     def boot(self) -> None:
         if self.__running:
