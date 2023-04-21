@@ -27,6 +27,17 @@ class Console:
             self.switch.delete_inter_to_run(inter_name)
         elif command == 'show macs':
             self.switch.mac_table.return_json()
+        elif command == 'help':
+            print('boot - boot switch')
+            print('run - run switch')
+            print('stop - stop switch')
+            print('shutdown - shutdown switch')
+            print('interfaces - show interfaces')
+            print('input interface: <interface name> - input interface to run')
+            print('delete interface: <interface name> - delete interface from running')
+            print('show macs - show mac table')
+            print('help - show help')
+            print('exit - exit from console')
         elif command == 'exit':
             try:
                 self.switch.stop()
