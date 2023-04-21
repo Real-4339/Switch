@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import psutil
 import pyangbind.lib.pybindJSON as pybindJSON
 
@@ -32,7 +34,7 @@ class InterfaceManager:
             raise InterfaceDoesNotExist
 
     def get_interfaces(self):
-        return self.__interface_container
+        return self.__interface_container.interface_entry.keys()
     
     def update_interface_name(self, old_name: str, new_name: str) -> None:
         if old_name not in self.__interface_container.interface_entry:
