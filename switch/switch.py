@@ -74,7 +74,8 @@ class Switch:
             log.info('Packet is not Ethernet')
             return
         
-        self.__mac_table.add_or_update_entry(packet[Ether].src, interface)
+        inter = self.__interface_manager.get_interface(interface)
+        self.__mac_table.add_or_update_entry(packet[Ether].src, inter)
         self.__mac_table.update()
 
         self.__send_packet(packet, interface)
