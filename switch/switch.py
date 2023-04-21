@@ -1,11 +1,10 @@
 import logging
 
-from mac import MacTable
-from sniffer import Sniffer
+from .mac import MacTable
+from .sniffer import Sniffer
 from scapy.packet import Packet
-from inter_mg import InterfaceManager
-from exceptions import SwitchIsActive, SwitchIsNotActive
-
+from .inter_mg import InterfaceManager
+from .exceptions import SwitchIsActive, SwitchIsNotActive
 
 
 class Switch:
@@ -45,7 +44,9 @@ class Switch:
     
     def __packet_handler(self, interface: str, packet: Packet) -> None:
         self.logger.info(f'Packet from {interface} is received')
-        ...
+
+        self.__mac_table.add_entry(packet.src, self.__interface_manager.interfaces[interface])
+        self.__mac_table.update()
 
     def boot(self) -> None:
         if self.__running:
