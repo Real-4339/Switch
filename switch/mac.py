@@ -1,6 +1,6 @@
 from time import time
 from dataclasses import dataclass
-from exceptions import MacAddressDoesNotExist
+from .exceptions import MacAddressDoesNotExist
 from templates.yang_py import sw_interface
 
 

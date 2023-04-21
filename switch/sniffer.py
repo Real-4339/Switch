@@ -1,6 +1,6 @@
 from typing import Callable
 from scapy.all import AsyncSniffer, Packet
-from exceptions import SnifferIsActive
+from .exceptions import SnifferIsActive
 
 
 class Sniffer:

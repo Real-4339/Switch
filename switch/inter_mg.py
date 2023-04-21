@@ -3,7 +3,7 @@ import pyangbind.lib.pybindJSON as pybindJSON
 
 from typing import OrderedDict
 from templates.yang_py import sw_interface
-from exceptions import InterfaceDoesNotExist, InvalidState
+from .exceptions import InterfaceDoesNotExist, InvalidState
 
 
 class InterfaceManager:
