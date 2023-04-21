@@ -1,6 +1,21 @@
 from typing import Callable
 from scapy.all import AsyncSniffer, Packet
 from .exceptions import SnifferIsActive
+from .switch import logging
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
+
+# Create a StreamHandler and set its level to INFO
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+
+# Create a formatter and add it to the handler
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# Add the handler to the logger
+log.addHandler(handler)
 
 
 class Sniffer:
@@ -25,12 +40,12 @@ class Sniffer:
     def start(self) -> None:
         if self.__running:
             raise SnifferIsActive
-        self.logger.info('Starting sniffer on interface: %s', self.__interface)
+        log.info('Starting sniffer on interface: %s', self.__interface)
         self.__running = True
         self.__sniffer.start()
 
     def stop(self) -> None:
         self.__running = False
         self.__sniffer.stop()
-        self.logger.info('Stopping sniffer on interface: %s', self.__interface)
+        log.info('Stopping sniffer on interface: %s', self.__interface)
         self.__packet_handler = None
