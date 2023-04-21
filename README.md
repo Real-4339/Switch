@@ -1,6 +1,34 @@
 # PowerdByIllia
 Software Switch
 
+## How to run:
+```
+python3 __main__.py or python __main__.py
+```
+>if you run it on linux, you need to run it as root
+
+First, you need to boot the switch, after add interface you want to sniffer:
+```
+boot
+input interface: lo
+```
+Run sniffer:
+```
+run
+```
+If you want to stop sniffer:
+```
+stop
+```
+If you want to stop switch:
+```
+shutdown or exit
+```
+Help:
+```
+help
+```
+
 ### To create python classes based on yang models:
 
 First, install virtualenv:
