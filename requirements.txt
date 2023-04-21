@@ -2,3 +2,4 @@ fastapi==0.95.0
 scapy==2.5.0
 uvicorn[standard]==0.13.4
 pyangbind==0.10.0
+aiconsole==0.2.0
