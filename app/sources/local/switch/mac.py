@@ -34,7 +34,7 @@ class MacTable:
     
     def add_or_update_entry(self, mac_address: str, port: sw_interface.interface().interfaces.interface_entry) -> None:
         with threading.Lock():
-            self.__entries[mac_address] = MacTableEntry(port, self.__max_age, time())
+            self.__entries[mac_address] = MacTableEntry(port, self.__max_age, time()) 
 
     def remove_entry(self, mac_address: str) -> None:
         try:
