@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class MacTableEntry(BaseModel):
     timer: int
     port: str
@@ -7,6 +8,7 @@ class MacTableEntry(BaseModel):
 
 
 class MacTable(BaseModel):
+    max_age: int
     entries: dict[str, MacTableEntry]
 
 
