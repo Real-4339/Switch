@@ -30,7 +30,7 @@ class LocalSwitchRepo:
         '''Get all statistics'''
         raise NotImplementedError
     
-    def update(self, command: str):
+    def update(self, command: str, interfaces: list = None):
         '''Run, Stop, Reset a switch'''
         if command == 'run':
             try:
@@ -42,6 +42,12 @@ class LocalSwitchRepo:
                 self.local_switch.stop()
             except:
                 log.error('Switch is already stopped')
+        elif command == 'add interface':
+            for interface in interfaces:
+                self.local_switch.choose_inter_to_run(interface)
+        elif command == 'delete interface':
+            for interface in interfaces:
+                self.local_switch.choose_inter_to_stop(interface)
         else:
             raise NotImplementedError
     
@@ -51,7 +57,7 @@ class LocalSwitchRepo:
             self.local_switch.stop()
         finally:
             self.local_switch.shutdown()
-    
+
 
 class InterfaceRepo:
     def __init__(self):

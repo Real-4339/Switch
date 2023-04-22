@@ -44,12 +44,36 @@ function resetPortInfo(port) {
     const value2Textareas = textareas[1]
     value1Textareas.value = "";
     value2Textareas.value = "";
+    fetch("/clearStatistics", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+            },
+        body: JSON.stringify({
+            "event": "clearStatistics"
+            })
+        })
+        .then(response => response.json())
+        .then(data => { console.log(data) })
+        .catch(error => console.error(error))
 }
 function clearMAC() {
     const macTableElement = document.getElementsByClassName("packageAnalysis--content--center")[0];
     const macTableTextareas = macTableElement.querySelectorAll('.inOutTextarea');
     const macTableTextarea = macTableTextareas[0];
     macTableTextarea.value = "";
+    fetch("/clearMAC", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+            },
+        body: JSON.stringify({
+            "event": "clearMAC"
+            })
+        })
+        .then(response => response.json())
+        .then(data => { console.log(data) })
+        .catch(error => console.error(error))
 }
 function pushNewTimer() {
     const pushNumber = document.getElementById("pushNumber").value;

@@ -89,7 +89,7 @@ class Switch:
     def choose_inter_to_run(self, interface_name: str) -> None:
         if self.__running:
             raise SwitchIsActive
-        if interface_name not in self.__interface_manager.get_interfaces():
+        if interface_name not in self.__interface_manager.get_keys():
             raise InterfaceDoesNotExist
         self.__working_interfaces[interface_name] = Sniffer(interface_name, self.__packet_handler)
         log.info(f'Interface {interface_name} is added to working interfaces')

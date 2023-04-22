@@ -14,7 +14,7 @@ async def set_events(event: str = Body(..., embed=True), interface1: Optional[st
 
         containers.core.repos.local_switch.update("stop")
 
-        containers.core.repos.local_switch_interface.update(command="add interface", interfaces=[interface1, interface2])
+        containers.core.repos.local_switch.update(command="add interface", interfaces=[interface1, interface2])
         containers.core.repos.local_switch.update("run")
 
         return {"start": True}
