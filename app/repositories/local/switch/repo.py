@@ -44,7 +44,7 @@ class InterfaceRepo:
         if command:
             return self.local_switch.interface_manager.get_interface(command)
         else:
-            return self.local_switch.interface_manager.get_interfaces()
+            return self.local_switch.interface_manager.get_keys()
     
     def update(self, command: str, interface_name: str = None, state: str = None):
         '''Update interface name or state, or both, or even add a new interface'''
