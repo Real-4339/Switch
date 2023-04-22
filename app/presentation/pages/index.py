@@ -12,7 +12,7 @@ async def read_root(request: Request):
         "index.html",
         {
             "request": request,
-            "interfaces": _,
+            "interfaces": [],
             "port1": [{"value1": [], "value2": []}],
             "port2": [{"value1": [], "value2": []}],
             "macTable": [{}]

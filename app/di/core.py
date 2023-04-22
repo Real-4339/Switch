@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from functools import cached_property
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
+from .sources import Sources
 
 class CoreContainer:
     @cached_property
@@ -18,3 +18,9 @@ class CoreContainer:
         app = FastAPI()
         app.mount("/static", StaticFiles(directory=self.static), name="static")
         return app
+    
+    @cached_property
+    def sources(self) -> Sources:
+        raise Sources()
+
+core = CoreContainer()
