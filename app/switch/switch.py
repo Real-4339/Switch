@@ -30,6 +30,7 @@ class Switch:
     
     def __init__(self) -> None:
         self.__running = False
+        self.__booted = False
         self.__mac_table = MacTable()
         self.__console = Console(self)
         self.__interface_manager = InterfaceManager()
@@ -81,8 +82,9 @@ class Switch:
         self.__send_packet(packet, interface)
 
     def boot(self) -> None:
-        if self.__running:
+        if self.__running or self.__booted:
             raise SwitchIsActive
+        self.__booted = True
         self.__interface_manager.boot()
         log.info('Switch is active')
 
@@ -102,6 +104,8 @@ class Switch:
     def run(self) -> None:
         if self.__running:
             raise SwitchIsActive
+        if not self.__booted:
+            raise SwitchIsNotActive
         self.__running = True
         for interface in self.__working_interfaces.values():
             interface.start()
@@ -118,5 +122,8 @@ class Switch:
     def shutdown(self) -> None:
         if self.__running:
             raise SwitchIsActive
+        if not self.__booted:
+            raise SwitchIsNotActive
+        self.__booted = False
         self.__interface_manager.shutdown()
         log.info('Switch is shutdown')
