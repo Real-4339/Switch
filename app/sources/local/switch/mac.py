@@ -1,10 +1,10 @@
 import threading
 
 from time import time
+from .inter_mg import pybindJSON
 from dataclasses import dataclass
 from .exceptions import MacAddressDoesNotExist
-from templates.yang_py import sw_interface
-from .inter_mg import pybindJSON
+from app.presentation.resources.templates.yang_py import sw_interface
 
 @dataclass
 class MacTableEntry:
@@ -58,6 +58,6 @@ class MacTable:
             "max_age": self.__max_age
         }
     
-    def return_json(self) -> str:
+    def dump_json(self) -> str:
         return pybindJSON.dumps(self.__entries)
     

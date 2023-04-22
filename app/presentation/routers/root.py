@@ -4,15 +4,15 @@ from app.di import containers
 from fastapi.responses import HTMLResponse
 
 
-index_page = APIRouter()
+root = APIRouter()
 
-@index_page.get("/", response_class=HTMLResponse)
+@root.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return containers.core.templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "interfaces": [],
+            "interfaces": containers.core.repos.local_switch_interface.get(),
             "port1": [{"value1": [], "value2": []}],
             "port2": [{"value1": [], "value2": []}],
             "macTable": [{}]

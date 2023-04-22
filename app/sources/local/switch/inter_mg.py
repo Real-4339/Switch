@@ -4,8 +4,8 @@ import psutil
 import pyangbind.lib.pybindJSON as pybindJSON
 
 from typing import OrderedDict
-from templates.yang_py import sw_interface
 from .exceptions import InterfaceDoesNotExist, InvalidState
+from app.presentation.resources.templates.yang_py import sw_interface
 
 
 class InterfaceManager:
@@ -33,8 +33,8 @@ class InterfaceManager:
         except AttributeError:
             raise InterfaceDoesNotExist
 
-    def get_interfaces(self):
-        return self.__interface_container.interface_entry.keys()
+    def get_interfaces(self) -> OrderedDict:
+        return self.__interface_container.interface_entry.items()
     
     def update_interface_name(self, old_name: str, new_name: str) -> None:
         if old_name not in self.__interface_container.interface_entry:
@@ -50,10 +50,10 @@ class InterfaceManager:
             raise InterfaceDoesNotExist
         self.__interface_container.interface_entry[interface_name].state = state
 
-    def return_json(self) -> OrderedDict:
+    def dump_json(self) -> OrderedDict:
         return pybindJSON.dumps(self.__interface_container)
     
-    def return_interface_json(self, interface_name: str) -> OrderedDict:
+    def dump_interface_json(self, interface_name: str) -> OrderedDict:
         if interface_name not in self.__interface_container.interface_entry:
             raise InterfaceDoesNotExist
         return pybindJSON.dumps(self.__interface_container.interface_entry[interface_name])
