@@ -36,6 +36,9 @@ class InterfaceManager:
     def get_interfaces(self) -> OrderedDict:
         return self.__interface_container.interface_entry.items()
     
+    def get_keys(self) -> list:
+        return self.__interface_container.interface_entry.keys()
+    
     def update_interface_name(self, old_name: str, new_name: str) -> None:
         if old_name not in self.__interface_container.interface_entry:
             raise InterfaceDoesNotExist
