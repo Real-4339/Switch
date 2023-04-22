@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from .exceptions import MacAddressDoesNotExist
 from app.presentation.resources.templates.yang_py import sw_interface
 
+
 @dataclass
 class MacTableEntry:
     port: sw_interface.interface().interfaces.interface_entry

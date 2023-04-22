@@ -1,10 +1,10 @@
 from app.di import containers
-from app.presentation.routers import root
-from app.presentation.websocket import websock
+from app.presentation.routers import root, websock, events_router
 
 app = containers.core.app
 app.include_router(root)
 app.include_router(websock)
+app.include_router(events_router)
 
 # Events
 @app.on_event("startup")

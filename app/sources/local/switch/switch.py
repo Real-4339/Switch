@@ -78,7 +78,7 @@ class Switch:
         self.__mac_table.add_or_update_entry(packet[Ether].src, inter)
         self.__mac_table.update()
 
-        self.__send_packet(packet, interface)
+        # self.__send_packet(packet, interface)
 
     def boot(self) -> None:
         if self.__running:

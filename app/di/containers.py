@@ -11,6 +11,6 @@ class Containers:
     @cached_property
     def model(self) -> ModelContainer:
         return ModelContainer()
-    
+
 
 containers = Containers()
