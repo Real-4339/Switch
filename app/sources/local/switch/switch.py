@@ -71,7 +71,7 @@ class Switch:
     def __packet_handler(self, interface: str, packet: Packet) -> None:
         log.info(f'Packet from {interface} is received')
         
-        if not packet.getlayer(Ether):
+        if not packet.getlayer(Ether): 
             log.info('Packet is not Ethernet')
             return
         
