@@ -1,20 +1,17 @@
 from pydantic import BaseModel
 
 
-class MacTableEntry(BaseModel):
-    timer: int
-    port: str
-    last_seen: int
-
-
 class MacTable(BaseModel):
     max_age: int
-    entries: dict[str, MacTableEntry]
 
 
 class Interface(BaseModel):
     name: str
-    state: bool
+    state: str
+
+
+class LocalSwitch(BaseModel):
+    name: str
 
 
 class Switch(BaseModel):

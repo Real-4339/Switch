@@ -26,11 +26,12 @@ class LocalSwitchRepo:
         '''Boot a switch'''
         self.local_switch.boot()
 
-    def get(self):
-        '''Get all statistics'''
-        raise NotImplementedError
-    
-    def update(self, command: str, interfaces: list = None):
+    def get(self, command: str = None):
+        '''Get all statistics or name of switch'''
+        if command == 'name':
+            return self.local_switch.name
+
+    def update(self, command: str, interfaces: list = None, name: str = None):
         '''Run, Stop, Reset a switch'''
         if command == 'run':
             try:
@@ -47,7 +48,10 @@ class LocalSwitchRepo:
                 self.local_switch.choose_inter_to_run(interface)
         elif command == 'delete interface':
             for interface in interfaces:
-                self.local_switch.choose_inter_to_stop(interface)
+                self.local_switch.delete_inter_to_run(interface)
+        elif command == 'name':
+            self.local_switch.name = name
+            return self.local_switch.name
         else:
             raise NotImplementedError
     
@@ -68,10 +72,16 @@ class InterfaceRepo:
         '''Is booted with switch'''
         raise NotImplementedError
 
-    def get(self, command: str = None):
+    def get(self, command: str = None, interface: str = None):
         '''Get all interfaces or a specific interface'''
-        if command:
-            return self.local_switch.interface_manager.get_interface(command)
+        if command == 'get interface':
+            return self.local_switch.interface_manager.get_interface(interface)
+        elif command == 'all':
+            return self.local_switch.interface_manager.get_interfaces()
+        elif command == 'up':
+            return self.local_switch.working_interfaces.keys() if self.local_switch.running else {}
+        elif command == 'down':
+            return self.local_switch.interface_manager.get_keys() - self.local_switch.working_interfaces.keys() if self.local_switch.running else self.local_switch.interface_manager.get_keys()
         else:
             return self.local_switch.interface_manager.get_keys()
     
@@ -98,12 +108,13 @@ class MacRepo:
         raise NotImplementedError
 
     def get(self):
-        '''Get all macs'''
-        raise NotImplementedError
+        '''Get timer'''
+        return self.local_mac.max_age
     
-    def update(self):
+    def update(self, timer: int = None):
         '''Update macs time to live'''
-        raise NotImplementedError
+        self.local_mac.update_timer(timer)
+        return self.local_mac.max_age
     
     def delete(self):
         '''Delete all macs'''

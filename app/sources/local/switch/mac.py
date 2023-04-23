@@ -56,6 +56,12 @@ class MacTable:
     def remove_all(self) -> None:
         with threading.Lock():
             self.__entries.clear()
+
+    def update_timer(self, timer: int) -> None:
+        self.max_age = timer
+        with threading.Lock():
+            for entry in self.__entries.values():
+                entry.timer = timer
         
     def statistics(self) -> dict[str, int]:
         return {

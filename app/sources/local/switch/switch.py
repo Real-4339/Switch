@@ -30,11 +30,16 @@ class Switch:
     __version__ = '3.0.1'
     
     def __init__(self) -> None:
+        self.__name = 'Switch'
         self.__running = False
         self.__mac_table = MacTable()
         self.__console = Console(self)
         self.__interface_manager = InterfaceManager()
         self.__working_interfaces: dict[str, Sniffer] = {}
+
+    @property
+    def name(self) -> str:
+        return self.__name
 
     @property
     def running(self) -> bool:
@@ -54,7 +59,11 @@ class Switch:
     
     @property
     def working_interfaces(self) -> dict[str, Sniffer]:
-        return self.__working_interfaces
+        return self.__working_interfaces.copy()
+    
+    @name.setter
+    def name(self, name: str) -> None:
+        self.__name = name
     
     def __send_packet(self, packet: Packet, inter_from: str) -> None:
         
@@ -99,12 +108,14 @@ class Switch:
         if interface_name not in self.__interface_manager.get_keys():
             raise InterfaceDoesNotExist
         self.__working_interfaces[interface_name] = Sniffer(interface_name, self.__packet_handler)
+        self.__interface_manager.update_interface_state(interface_name, 'up')
         log.info(f'Interface {interface_name} is added to working interfaces')
 
     def delete_inter_to_run(self, interface_name: str) -> None:
         if self.__running:
             raise SwitchIsActive
         del self.__working_interfaces[interface_name]
+        self.__interface_manager.update_interface_state(interface_name, 'down')
 
     def run(self) -> None:
         if self.__running:
@@ -117,9 +128,11 @@ class Switch:
     def stop(self) -> None:
         if not self.__running:
             raise SwitchIsNotActive
-        for interface in self.__working_interfaces.values():
-            interface.stop()
+        for sniffer in self.__working_interfaces.values():
+            sniffer.stop()
         self.__running = False
+        for interface in self.__working_interfaces.copy():
+            self.delete_inter_to_run(interface)
         log.info('Switch is stopped')
 
     def shutdown(self) -> None:
