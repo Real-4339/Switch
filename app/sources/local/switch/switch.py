@@ -105,7 +105,6 @@ class Switch:
         self.mac_table.update()
 
         if len_before != len(self.mac_table.entries):
-            print(self.__containers, self.__containers.__class__.__name__)
             self.__containers.websocket.mac_table = self.mac_table.entries
 
         # self.__send_packet(packet, interface)
