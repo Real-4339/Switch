@@ -30,7 +30,7 @@ class MacTable:
 
     @property
     def entries(self) -> dict[str, MacTableEntry]:
-        return self.__entries
+        return self.__entries.copy()
     
     def add_or_update_entry(self, mac_address: str, port: sw_interface.interface().interfaces.interface_entry) -> None:
         with threading.Lock():
@@ -43,7 +43,7 @@ class MacTable:
         except KeyError:
             raise MacAddressDoesNotExist
         
-    def update(self) -> None:
+    def update(self) -> bool:
         rm_list = []
         with threading.Lock():
             for mac_address, entry in self.__entries.items():
@@ -52,6 +52,10 @@ class MacTable:
             
             for mac_address in rm_list:
                 self.remove_entry(mac_address)
+
+    def remove_all(self) -> None:
+        with threading.Lock():
+            self.__entries.clear()
         
     def statistics(self) -> dict[str, int]:
         return {

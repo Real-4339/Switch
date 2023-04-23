@@ -107,4 +107,4 @@ class MacRepo:
     
     def delete(self):
         '''Delete all macs'''
-        raise NotImplementedError
+        self.local_mac.remove_all()

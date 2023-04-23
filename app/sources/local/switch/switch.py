@@ -69,7 +69,7 @@ class Switch:
         log.info(f'Packet to {interface} is sent')
 
     def __packet_handler(self, interface: str, packet: Packet) -> None:
-        log.info(f'Packet from {interface} is received')
+        # log.info(f'Packet from {interface} is received')
         
         if not packet.getlayer(Ether):
             log.info('Packet is not Ethernet')
@@ -82,14 +82,14 @@ class Switch:
         self.__mac_table.add_or_update_entry(packet[Ether].src, inter)
         self.__mac_table.update()
 
-        if len(self.__mac_table.entries) != len_before:
+        if len_before != len(self.__mac_table.entries):
             containers.websocket.mac_table = self.__mac_table.entries
 
         # self.__send_packet(packet, interface)
 
     def boot(self) -> None:
         if self.__running:
-            raise SwitchIsActive
+            raise SwitchIsActive 
         self.__interface_manager.boot()
         log.info('Switch is active')
 

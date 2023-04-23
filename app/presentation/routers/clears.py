@@ -4,10 +4,12 @@ from app.di import containers
 
 clears = APIRouter()
 
-@clears.get('/clearMAC')
+@clears.post('/clearMAC')
 def clear_mac():
     '''Clear MAC address table'''
-    #containers.core.repos.local_switch_mac.update('clear mac')
+    containers.core.repos.local_switch_mac.delete()
+
+    return {'message': 'MAC address table is cleared'}
 
 
 @clears.get('/clearStatistics')

@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI
 from functools import cached_property
 from .repositories import Repositories
@@ -6,6 +7,10 @@ from fastapi.templating import Jinja2Templates
 
 
 class CoreContainer:
+    @cached_property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        return asyncio.get_event_loop()
+
     @cached_property
     def templates(self) -> Jinja2Templates:
         return Jinja2Templates(directory="app/presentation/resources/templates/html")
