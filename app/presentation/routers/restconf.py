@@ -25,6 +25,16 @@ async def restconf_state(username: str = Depends(get_current_username),
     except Exception as e:
         return {"error": str(e)}
     
+@restconf_router.put('/restconf/state')
+async def restconf_state(username: str = Depends(get_current_username),
+                            state: containers.model.interface = Body(...)):
+        
+        try:
+            return containers.core.repos.local_switch_interface.update(command='update state', interface=state.name, state=state.state)
+        except Exception as e:
+            return {"error": str(e)}
+
+    
 @restconf_router.get('/restconf/interface_name')
 async def restconf_name(username: str = Depends(get_current_username),
                          interface: containers.model.interface = Body(...)):

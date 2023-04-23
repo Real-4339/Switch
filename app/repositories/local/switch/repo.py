@@ -1,6 +1,6 @@
 import logging
 
-from app.di.sources import sources 
+from app.di.sources import sources
 
 
 log = logging.getLogger(__name__)
@@ -20,53 +20,52 @@ log.addHandler(handler)
 
 class LocalSwitchRepo:
     def __init__(self):
-        self.local_switch = sources.local_switch
+        pass
 
     def create(self):
         '''Boot a switch'''
-        self.local_switch.boot()
+        sources.local_switch.boot()
 
     def get(self, command: str = None):
         '''Get all statistics or name of switch'''
         if command == 'name':
-            return self.local_switch.name
+            return sources.local_switch.name
 
     def update(self, command: str, interfaces: list = None, name: str = None):
         '''Run, Stop, Reset a switch'''
         if command == 'run':
             try:
-                self.local_switch.run()
+                sources.local_switch.run()
             except:
                 log.error('Switch is already running')
         elif command == 'stop':
             try:
-                self.local_switch.stop()
+                sources.local_switch.stop()
             except:
                 log.error('Switch is already stopped')
         elif command == 'add interface':
             for interface in interfaces:
-                self.local_switch.choose_inter_to_run(interface)
+                sources.local_switch.choose_inter_to_run(interface)
         elif command == 'delete interface':
             for interface in interfaces:
-                self.local_switch.delete_inter_to_run(interface)
+                sources.local_switch.delete_inter_to_run(interface)
         elif command == 'name':
-            self.local_switch.name = name
-            return self.local_switch.name
+            sources.local_switch.name = name
+            return sources.local_switch.name
         else:
             raise NotImplementedError
     
     def delete(self):
         '''Shutdown a switch'''
         try:
-            self.local_switch.stop()
+            sources.local_switch.stop()
         finally:
-            self.local_switch.shutdown()
+            sources.local_switch.shutdown()
 
 
 class InterfaceRepo:
     def __init__(self):
-        self.local_switch = sources.local_switch
-        self.local_interface = sources.local_switch_interface
+        pass
 
     def create(self):
         '''Is booted with switch'''
@@ -75,24 +74,36 @@ class InterfaceRepo:
     def get(self, command: str = None, interface: str = None):
         '''Get all interfaces or a specific interface'''
         if command == 'get interface':
-            return self.local_switch.interface_manager.get_interface(interface)
+            return sources.local_switch.interface_manager.get_interface(interface)
         elif command == 'all':
-            return self.local_switch.interface_manager.get_interfaces()
+            return sources.local_switch.interface_manager.get_interfaces()
         elif command == 'up':
-            return self.local_switch.working_interfaces.keys() if self.local_switch.running else {}
+            return sources.local_switch.working_interfaces.keys() if sources.local_switch.running else {}
         elif command == 'down':
-            return self.local_switch.interface_manager.get_keys() - self.local_switch.working_interfaces.keys() if self.local_switch.running else self.local_switch.interface_manager.get_keys()
+            return sources.local_switch.interface_manager.get_keys() - sources.local_switch.working_interfaces.keys() if sources.local_switch.running else sources.local_switch.interface_manager.get_keys()
         else:
-            return self.local_switch.interface_manager.get_keys()
+            return sources.local_switch.interface_manager.get_keys()
     
-    def update(self, command: str, interfaces: list = None):
+    def update(self, command: str, interfaces: list = None, interface: str = None, state: str = None):
         '''Update interface name or state, or both, or even add a new interface'''
         if command == 'add interface':
             for interface in interfaces:
-                self.local_switch.interface_manager.add_interface(interface)
+                sources.local_switch.interface_manager.add_interface(interface)
+        elif command == 'update state':
+            if interface in sources.local_switch.working_interfaces:
+                if state == 'up':
+                    return {'error': 'Interface is already up'}
+                elif state == 'down':
+                    sources.local_switch.stop_working_interface(interface)
+            else:
+                if not sources.local_switch.booted:
+                    return {'error': 'Switch is not booted'}
+                sources.local_switch.interface_manager.update_interface_state(interface, state)
+                return {'name': interface, 'new state': state}
+                
         elif command == 'delete interface':
             for interface in interfaces:
-                self.local_switch.interface_manager.remove_interface(interface)
+                sources.local_switch.interface_manager.remove_interface(interface)
     
     def delete(self):
         raise NotImplementedError
@@ -100,8 +111,7 @@ class InterfaceRepo:
 
 class MacRepo:
     def __init__(self):
-        self.local_switch = sources.local_switch
-        self.local_mac = sources.local_switch_mac
+        pass
 
     def create(self):
         '''Created with switch'''
@@ -109,13 +119,13 @@ class MacRepo:
 
     def get(self):
         '''Get timer'''
-        return self.local_mac.max_age
+        return sources.local_switch.mac_table.max_age
     
     def update(self, timer: int = None):
         '''Update macs time to live'''
-        self.local_mac.update_timer(timer)
-        return self.local_mac.max_age
+        sources.local_switch.mac_table.update_timer(timer)
+        return sources.local_switch.mac_table.max_age
     
     def delete(self):
         '''Delete all macs'''
-        self.local_mac.remove_all()
+        sources.local_switch.mac_table.remove_all()

@@ -53,7 +53,7 @@ class InterfaceManager:
             raise InterfaceDoesNotExist
         self.__interface_container.interface_entry[interface_name].state = state
 
-    def dump_json(self) -> OrderedDict:
+    def dump_json(self) -> str:
         return pybindJSON.dumps(self.__interface_container)
     
     def dump_interface_json(self, interface_name: str) -> OrderedDict:

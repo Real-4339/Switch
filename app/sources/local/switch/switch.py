@@ -32,11 +32,12 @@ class Switch:
     def __init__(self) -> None:
         self.__name = 'Switch'
         self.__running = False
+        self.__booted = False
         self.__mac_table = MacTable()
         self.__console = Console(self)
         self.__interface_manager = InterfaceManager()
         self.__working_interfaces: dict[str, Sniffer] = {}
-
+    
     @property
     def name(self) -> str:
         return self.__name
@@ -44,6 +45,10 @@ class Switch:
     @property
     def running(self) -> bool:
         return self.__running
+    
+    @property
+    def booted(self) -> bool:
+        return self.__booted
     
     @property
     def interface_manager(self) -> InterfaceManager:
@@ -59,19 +64,27 @@ class Switch:
     
     @property
     def working_interfaces(self) -> dict[str, Sniffer]:
-        return self.__working_interfaces.copy()
+        return self.__working_interfaces
     
     @name.setter
     def name(self, name: str) -> None:
         self.__name = name
+
+    @running.setter
+    def running(self, running: bool) -> None:
+        self.__running = running
+
+    @booted.setter
+    def booted(self, booted: bool) -> None:
+        self.__booted = booted
     
     def __send_packet(self, packet: Packet, inter_from: str) -> None:
         
-        if packet[Ether].dst in self.__mac_table.entries:
-            interface = self.__mac_table.entries[packet[Ether].dst].port.name
+        if packet[Ether].dst in self.mac_table.entries:
+            interface = self.mac_table.entries[packet[Ether].dst].port.name
             sendp(packet, iface=interface, verbose=False)
         else:
-            for interface in self.__working_interfaces:
+            for interface in self.working_interfaces:
                 if interface != inter_from:
                     sendp(packet, iface=interface, verbose=False)
 
@@ -84,59 +97,74 @@ class Switch:
             log.info('Packet is not Ethernet')
             return
         
-        inter = self.__interface_manager.get_interface(interface)
+        inter = self.interface_manager.get_interface(interface)
         
-        len_before = len(self.__mac_table.entries)
+        len_before = len(self.mac_table.entries)
 
-        self.__mac_table.add_or_update_entry(packet[Ether].src, inter)
-        self.__mac_table.update()
+        self.mac_table.add_or_update_entry(packet[Ether].src, inter)
+        self.mac_table.update()
 
-        if len_before != len(self.__mac_table.entries):
-            containers.websocket.mac_table = self.__mac_table.entries
+        if len_before != len(self.mac_table.entries):
+            print(containers, containers.__class__.__name__)
+            containers.websocket.mac_table = self.mac_table.entries
 
         # self.__send_packet(packet, interface)
 
     def boot(self) -> None:
-        if self.__running:
-            raise SwitchIsActive 
-        self.__interface_manager.boot()
+        if self.running or self.booted:
+            raise SwitchIsActive
+        self.booted = True
+        self.interface_manager.boot()
         log.info('Switch is active')
 
     def choose_inter_to_run(self, interface_name: str) -> None:
-        if self.__running:
+        if self.running:
             raise SwitchIsActive
-        if interface_name not in self.__interface_manager.get_keys():
+        if interface_name not in self.interface_manager.get_keys():
             raise InterfaceDoesNotExist
-        self.__working_interfaces[interface_name] = Sniffer(interface_name, self.__packet_handler)
-        self.__interface_manager.update_interface_state(interface_name, 'up')
+        self.working_interfaces[interface_name] = Sniffer(interface_name, self.__packet_handler)
+        self.interface_manager.update_interface_state(interface_name, 'up')
         log.info(f'Interface {interface_name} is added to working interfaces')
 
     def delete_inter_to_run(self, interface_name: str) -> None:
-        if self.__running:
+        if self.running:
             raise SwitchIsActive
-        del self.__working_interfaces[interface_name]
-        self.__interface_manager.update_interface_state(interface_name, 'down')
+        del self.working_interfaces[interface_name]
+        self.interface_manager.update_interface_state(interface_name, 'down')
 
     def run(self) -> None:
-        if self.__running:
+        if self.running:
             raise SwitchIsActive
-        self.__running = True
-        for interface in self.__working_interfaces.values():
+        print(self.booted)
+        if not self.booted:
+            raise SwitchIsNotActive
+        self.running = True
+        for interface in self.working_interfaces.values():
             interface.start()
         log.info('Switch is running')
 
     def stop(self) -> None:
-        if not self.__running:
+        if not self.running:
             raise SwitchIsNotActive
-        for sniffer in self.__working_interfaces.values():
+        for sniffer in self.working_interfaces.values():
             sniffer.stop()
-        self.__running = False
-        for interface in self.__working_interfaces.copy():
+        self.running = False
+        for interface in self.working_interfaces.copy():
             self.delete_inter_to_run(interface)
         log.info('Switch is stopped')
 
+    def stop_working_interface(self, interface_name: str) -> None:
+        if not self.booted:
+            raise SwitchIsNotActive
+        self.working_interfaces[interface_name].stop()
+        self.interface_manager.update_interface_state(interface_name, 'down')
+        del self.working_interfaces[interface_name]
+
     def shutdown(self) -> None:
-        if self.__running:
+        if self.running:
             raise SwitchIsActive
-        self.__interface_manager.shutdown()
+        if not self.booted:
+            raise SwitchIsNotActive
+        self.booted = False
+        self.interface_manager.shutdown()
         log.info('Switch is shutdown')
