@@ -6,14 +6,22 @@ socket.onopen = function(event) {
 
 socket.onmessage = function(event) {
     let data = JSON.parse(event.data);
+    console.log(data);
     if (data.type === "updatePort") {
         updatePort(data.port, data.list);
     } else if (data.type === "updateMacTable") {
         updateMacTable(data.macTable);
     } else if (data.type === "addToMacTable") {
         addToMacTable(data.macTable);
+    } else if (data.type === "log") {
+        pushLog(data.log);
     }
 };
+
+function pushLog(log) {
+    const logTextarea = document.getElementById("postResponse");
+    logTextarea.value += log + "\n";
+}
 
 function addToMacTable(macTable) {
     const macTableElement = document.getElementsByClassName("packageAnalysis--content--center")[0];

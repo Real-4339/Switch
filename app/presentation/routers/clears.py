@@ -10,9 +10,3 @@ def clear_mac():
     containers.core.repos.local_switch_mac.delete()
 
     return {'message': 'MAC address table is cleared'}
-
-
-@clears.get('/clearStatistics')
-def clear_statistics():
-    '''Clear statistics'''
-    #containers.core.repos.local_switch.update('clear statistics')

@@ -5,9 +5,13 @@ from .console import Console
 from .sniffer import Sniffer
 from scapy.packet import Packet
 from scapy.sendrecv import sendp
-from scapy.layers.l2 import Ether
 from .inter_mg import InterfaceManager
-from .exceptions import SwitchIsActive, SwitchIsNotActive, InterfaceDoesNotExist
+from scapy.layers.l2 import Ether, ARP
+from scapy.layers.http import HTTPRequest
+from scapy.layers.inet import IP, TCP, UDP, ICMP
+from .exceptions import (SwitchIsActive, 
+                         SwitchIsNotActive, 
+                         InterfaceDoesNotExist)
 
 
 log = logging.getLogger(__name__)
@@ -36,6 +40,10 @@ class Switch:
         self.__console = Console(self)
         self.__interface_manager = InterfaceManager()
         self.__working_interfaces: dict[str, Sniffer] = {}
+        self.__port1: str = None
+        self.__port2: str = None
+        self.__port1_statistic: list[dict[str, list]] = [{"value1": [], "value2": []}]
+        self.__port2_statistic: list[dict[str, list]] = [{"value1": [], "value2": []}]
         self.__containers = containers
     
     @property
@@ -65,6 +73,38 @@ class Switch:
     @property
     def working_interfaces(self) -> dict[str, Sniffer]:
         return self.__working_interfaces
+    
+    @property
+    def port1(self) -> str:
+        return self.__port1
+    
+    @property
+    def port2(self) -> str:
+        return self.__port2
+    
+    @property
+    def port1_statistic(self) -> list[dict[str, list]]:
+        return self.__port1_statistic
+    
+    @property
+    def port2_statistic(self) -> list[dict[str, list]]:
+        return self.__port2_statistic
+    
+    @port1_statistic.setter
+    def port1_statistic(self, port1_statistic: list[dict[str, list]]) -> None:
+        self.__port1_statistic = port1_statistic
+        
+    @port2_statistic.setter
+    def port2_statistic(self, port2_statistic: list[dict[str, list]]) -> None:
+        self.__port2_statistic = port2_statistic
+    
+    @port1.setter
+    def port1(self, port1: str) -> None:
+        self.__port1 = port1
+
+    @port2.setter
+    def port2(self, port2: str) -> None:
+        self.__port2 = port2
     
     @name.setter
     def name(self, name: str) -> None:
@@ -104,10 +144,76 @@ class Switch:
         self.mac_table.add_or_update_entry(packet[Ether].src, inter)
         self.mac_table.update()
 
+        # self.__send_packet(packet, interface)
+
         if len_before != len(self.mac_table.entries):
             self.__containers.websocket.mac_table = self.mac_table.entries
 
-        # self.__send_packet(packet, interface)
+        json_packet_in = {"Ethernet2": "",
+                       "IP": "",
+                       "ARP": "",
+                       "TCP": "",
+                       "UDP": "",
+                       "ICMP": "",
+                       "HTTP": "",
+                       "Total": ""}
+        json_packet_out = {"Ethernet2": "",
+                       "IP": "",
+                       "ARP": "",
+                       "TCP": "",
+                       "UDP": "",
+                       "ICMP": "",
+                       "HTTP": "",
+                       "Total": ""}
+
+        total = 0
+        if packet.haslayer(Ether):
+            json_packet_in["Ethernet2"] = packet[Ether].type
+            json_packet_out["Ethernet2"] = packet[Ether].type
+            total += 1
+        if packet.haslayer(IP):
+            json_packet_in["IP"] = packet[IP].src
+            json_packet_out["IP"] = packet[IP].dst
+            total += 1
+        if packet.haslayer(ARP):
+            json_packet_in["ARP"] = packet[ARP].psrc
+            json_packet_out["ARP"] = packet[ARP].pdst
+            total += 1
+        if packet.haslayer(TCP):
+            json_packet_in["TCP"] = packet[TCP].sport
+            json_packet_out["TCP"] = packet[TCP].dport
+            total += 1
+        if packet.haslayer(UDP):
+            json_packet_in["UDP"] = packet[UDP].sport
+            json_packet_out["UDP"] = packet[UDP].dport
+            total += 1
+        if packet.haslayer(ICMP):
+            json_packet_in["ICMP"] = packet[ICMP].type
+            json_packet_out["ICMP"] = packet[ICMP].type
+            total += 1
+        if packet.haslayer(HTTPRequest):
+            json_packet_in["HTTP"] = packet[HTTPRequest].Method.decode()
+            json_packet_out["HTTP"] = packet[HTTPRequest].Method.decode()
+            total += 1
+        json_packet_in["Total"] = total
+        json_packet_out["Total"] = total
+
+        if interface == self.port1:
+            self.port1_statistic[0]['value1'].append(json_packet_in)
+            self.port1_statistic[0]['value2'].append(json_packet_out)
+
+            if len(self.port1_statistic[0]['value1']) > 50:
+                self.__containers.websocket.port1_statistic = self.port1_statistic
+                self.port1_statistic = [{"value1": [], "value2": []}]
+        
+        if interface == self.port2:
+            self.port2_statistic[0]['value1'].append(json_packet_in)
+            self.port2_statistic[0]['value2'].append(json_packet_out)
+
+            if len(self.port2_statistic[0]['value1']) > 50:
+                self.__containers.websocket.port2_statistic = self.port2_statistic
+                self.port2_statistic = [{"value1": [], "value2": []}]
+                
 
     def boot(self) -> None:
         if self.running or self.booted:
@@ -122,6 +228,10 @@ class Switch:
         if interface_name not in self.interface_manager.get_keys():
             raise InterfaceDoesNotExist
         self.working_interfaces[interface_name] = Sniffer(interface_name, self.__packet_handler)
+        if self.port1 == None:
+            self.port1 = interface_name
+        elif self.port2 == None:
+            self.port2 = interface_name
         self.interface_manager.update_interface_state(interface_name, 'up')
         log.info(f'Interface {interface_name} is added to working interfaces')
 
@@ -150,6 +260,10 @@ class Switch:
         self.running = False
         for interface in self.working_interfaces.copy():
             self.delete_inter_to_run(interface)
+        self.port1 = None
+        self.port2 = None
+        self.port1_statistic = [{"value1": [], "value2": []}]
+        self.port2_statistic = [{"value1": [], "value2": []}]
         log.info('Switch is stopped')
 
     def stop_working_interface(self, interface_name: str) -> None:
