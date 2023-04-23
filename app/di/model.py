@@ -1,5 +1,6 @@
-from app.repositories.local.switch.model import Switch, Interface, \
-                        MacTable, LocalSwitch
+from app.repositories.local.switch.model import (
+    Switch, Interface, MacTable, LocalSwitch
+)
 from functools import cached_property
 
 

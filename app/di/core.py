@@ -7,6 +7,9 @@ from fastapi.templating import Jinja2Templates
 
 
 class CoreContainer:
+    def __init__(self, containers) -> None:
+        self.__containers = containers
+    
     @cached_property
     def loop(self) -> asyncio.AbstractEventLoop:
         return asyncio.get_event_loop()
@@ -27,6 +30,6 @@ class CoreContainer:
     
     @cached_property
     def repos(self) -> Repositories:
-        return Repositories()
+        return Repositories(self.__containers)
 
-core = CoreContainer()
+# core = CoreContainer()

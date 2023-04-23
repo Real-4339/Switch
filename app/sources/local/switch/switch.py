@@ -3,7 +3,6 @@ import logging
 from .mac import MacTable
 from .console import Console
 from .sniffer import Sniffer
-from app.di import containers
 from scapy.packet import Packet
 from scapy.sendrecv import sendp
 from scapy.layers.l2 import Ether
@@ -29,7 +28,7 @@ log.addHandler(handler)
 class Switch:
     __version__ = '3.0.1'
     
-    def __init__(self) -> None:
+    def __init__(self, containers) -> None:
         self.__name = 'Switch'
         self.__running = False
         self.__booted = False
@@ -37,6 +36,7 @@ class Switch:
         self.__console = Console(self)
         self.__interface_manager = InterfaceManager()
         self.__working_interfaces: dict[str, Sniffer] = {}
+        self.__containers = containers
     
     @property
     def name(self) -> str:
@@ -105,8 +105,8 @@ class Switch:
         self.mac_table.update()
 
         if len_before != len(self.mac_table.entries):
-            print(containers, containers.__class__.__name__)
-            containers.websocket.mac_table = self.mac_table.entries
+            print(self.__containers, self.__containers.__class__.__name__)
+            self.__containers.websocket.mac_table = self.mac_table.entries
 
         # self.__send_packet(packet, interface)
 

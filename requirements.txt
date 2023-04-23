@@ -1,5 +1,5 @@
-fastapi==0.95.0
+fastapi==0.95.1
 scapy==2.5.0
-uvicorn[standard]==0.13.4
-pyangbind==0.10.0
-aiconsole==0.2.0
+uvicorn[standard]==0.21.1
+pyangbind==0.8.1
+aioconsole==0.6.1

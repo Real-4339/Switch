@@ -1,11 +1,10 @@
 import asyncio
 import json
 
-from app.di.core import core
 
 
 class WebsocketContainer:
-    def __init__(self) -> None:
+    def __init__(self, core) -> None:
         self.__clients = set()
         self.__mac_table = None
         self.__loop = core.loop
