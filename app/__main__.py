@@ -1,5 +1,5 @@
 from app.di import containers
-from app.presentation.routers import root, websock, events_router
+from app.presentation.routers import root, events_router, websock
 
 app = containers.core.app
 app.include_router(root)

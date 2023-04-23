@@ -16,7 +16,6 @@ class Containers:
     @cached_property
     def websocket(self) -> WebsocketContainer:
         return WebsocketContainer()
-        
 
 
 containers = Containers()

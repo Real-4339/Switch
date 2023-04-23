@@ -1,17 +1,12 @@
-from typing import Callable
-from functools import cached_property
+import asyncio
+import json
 
 
 class WebsocketContainer:
-    '''
-    Websocket container
-    I call functions from this class from mac-table and switch to send data to frontend
-    broadcast_mac_table - are called from mac-table setter, which already contains websocket function to send data to frontend,
-    it contains callable function from websocket.py
-    '''
     def __init__(self) -> None:
         self.__clients = set()
         self.__mac_table = None
+        self.__loop = asyncio.new_event_loop()
 
     @property
     def clients(self) -> set:
@@ -24,11 +19,17 @@ class WebsocketContainer:
     @mac_table.setter
     def mac_table(self, mac_table: dict) -> None:
         self.__mac_table = mac_table
-        self.call_mac_update(mac_table)
+        self.__loop.run_until_complete(self.__run(mac_table))
+
+    async def __run(self, mac_table: dict) -> None:
+        self.__loop.create_task(self.__update_mac_table(mac_table))
+
+    async def __update_mac_table(self, mac_table: dict) -> None:
+        data = {"type": "updateMacTable", "macTable": list(mac_table)}
+        json_data = json.dumps(data)
         
+        print("Sending data to clients")
 
-    def set_mac_update(self, mac_update: Callable) -> None:
-        self.__mac_update = mac_update
-
-    async def call_mac_update(self, mac_table: dict) -> None:
-        await self.__mac_update(mac_table)
+        for client in self.__clients:
+            await client.send_text(json_data)
+    

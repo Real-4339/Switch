@@ -1,10 +1,9 @@
 from .root import root
-from .websocket import websock
 from .events import events_router
+from .websocket import websock
 
 __all__ = [
     'root',
-    'websock',
     'events_router',
-
+    'websock',
 ]
