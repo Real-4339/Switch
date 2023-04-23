@@ -3,6 +3,10 @@ Software Switch
 
 ## How to run:
 ```bash
+python -m app
+```
+for dev:
+```bash
 uvicorn app.__main__:app --reload
 ```
 >if you run it on linux, you need to run it as root
