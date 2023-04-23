@@ -24,7 +24,11 @@ class WebsocketContainer:
     @mac_table.setter
     def mac_table(self, mac_table: dict) -> None:
         self.__mac_table = mac_table
-        self.__mac_update(mac_table)
+        self.call_mac_update(mac_table)
+        
 
     def set_mac_update(self, mac_update: Callable) -> None:
         self.__mac_update = mac_update
+
+    async def call_mac_update(self, mac_table: dict) -> None:
+        await self.__mac_update(mac_table)
