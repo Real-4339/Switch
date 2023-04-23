@@ -3,6 +3,7 @@ import logging
 from .mac import MacTable
 from .console import Console
 from .sniffer import Sniffer
+from app.di import containers
 from scapy.packet import Packet
 from scapy.sendrecv import sendp
 from scapy.layers.l2 import Ether
@@ -75,8 +76,14 @@ class Switch:
             return
         
         inter = self.__interface_manager.get_interface(interface)
+        
+        len_before = len(self.__mac_table.entries)
+
         self.__mac_table.add_or_update_entry(packet[Ether].src, inter)
         self.__mac_table.update()
+
+        if len(self.__mac_table.entries) != len_before:
+            containers.websocket.mac_table = self.__mac_table.entries
 
         # self.__send_packet(packet, interface)
 
