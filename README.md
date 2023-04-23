@@ -101,8 +101,8 @@ curl --location --request PUT 'http://127.0.0.1:8000/restconf/interface_name' \
 --header 'Content-Type: application/yang.data+json' \
 --header 'Authorization: Basic bXl1c2VybmFtZTpteXBhc3N3b3Jk' \
 --data '{
-    "name": "str",
-    "state": ""
+    "interface": "str",
+    "name": "str"
 }'
 ```
 

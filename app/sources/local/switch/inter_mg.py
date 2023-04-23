@@ -42,7 +42,7 @@ class InterfaceManager:
     def update_interface_name(self, old_name: str, new_name: str) -> None:
         if old_name not in self.__interface_container.interface_entry:
             raise InterfaceDoesNotExist
-        self.__interface_container.interface_entry.remove(old_name)
+        del self.__interface_container.interface_entry[old_name]
         new_interface = self.__interface_container.interface_entry.add(new_name)
         new_interface.state = "down"
 

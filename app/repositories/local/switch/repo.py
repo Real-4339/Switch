@@ -1,5 +1,9 @@
 from __future__ import annotations
+
 import logging
+import platform
+import netifaces
+import subprocess
 import app.di.containers as di_containers
 
 
@@ -85,23 +89,57 @@ class InterfaceRepo:
         else:
             return self.__containers.sources.local_switch.interface_manager.get_keys()
     
-    def update(self, command: str, interfaces: list | None = None, interface: str | None = None, state: str | None = None):
+    def update(self, command: str, interfaces: list | None = None, interface: str | None = None, state: str | None = None, name: str | None = None):
         '''Update interface name or state, or both, or even add a new interface'''
         if command == 'add interface' and interfaces:
             for interface_ in interfaces:
                 self.__containers.sources.local_switch.interface_manager.add_interface(interface_)
+        
         elif command == 'update state':
             if interface in self.__containers.sources.local_switch.working_interfaces:
                 if state == 'up':
                     return {'error': 'Interface is already up'}
                 elif state == 'down':
                     self.__containers.sources.local_switch.stop_working_interface(interface)
+                    return {'name': interface, 'new state': state}
             else:
                 if not self.__containers.sources.local_switch.booted or not interface or not state:
                     return {'error': 'Switch is not booted'}
                 self.__containers.sources.local_switch.interface_manager.update_interface_state(interface, state)
                 return {'name': interface, 'new state': state}
-                
+        
+        elif command == 'update name':
+            if interface in self.__containers.sources.local_switch.working_interfaces:
+                return {'error': 'Interface is up, please shut it down first'}
+            else:
+                if not self.__containers.sources.local_switch.booted or not interface or not name:
+                    return {'error': 'Switch is not booted'}
+                self.__containers.sources.local_switch.interface_manager.update_interface_name(interface, name)
+
+                os_name = platform.system()
+                old_index = 0
+                if os_name == 'Windows':
+                    
+                    this_interfaces = netifaces.interfaces()
+                    for this_interface in this_interfaces:
+                        if this_interface == interface:
+                            old_index = netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]['addr']
+
+                    command = f'netsh interface set interface name="{interface}" newname="{name}" index="{old_index}"'
+                    res = subprocess.run(command, shell=True, capture_output=True)
+                    if res.returncode != 0:
+                        return {'error': res.stderr.decode('utf-8')}
+
+                elif os_name == 'Linux':
+                    try:
+                        res = subprocess.run(['ip', 'link', 'set', interface, 'down'])
+                        res = subprocess.run(['ip', 'link', 'set', interface, 'name', name])
+                        res = subprocess.run(['ip', 'link', 'set', name, 'up'])
+                    except Exception as e:
+                        return {'error': e}
+
+                return {'name': interface, 'new name': name}
+        
         elif command == 'delete interface' and interfaces:
             for interface_ in interfaces:
                 self.__containers.sources.local_switch.interface_manager.remove_interface(interface_)

@@ -1,5 +1,5 @@
 from app.repositories.local.switch.model import (
-    Switch, Interface, MacTable, LocalSwitch
+    Switch, Interface, MacTable, LocalSwitch, InterfaceName
 )
 from functools import cached_property
 
@@ -20,3 +20,7 @@ class ModelContainer:
     @cached_property
     def local_switch(self) -> LocalSwitch:
         return LocalSwitch
+    
+    @cached_property
+    def interface_name(self) -> InterfaceName:
+        return InterfaceName

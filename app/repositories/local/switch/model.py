@@ -10,6 +10,11 @@ class Interface(BaseModel):
     state: str
 
 
+class InterfaceName(BaseModel):
+    interface: str
+    name: str
+
+
 class LocalSwitch(BaseModel):
     name: str
 
