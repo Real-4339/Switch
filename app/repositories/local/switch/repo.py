@@ -83,9 +83,9 @@ class InterfaceRepo:
         elif command == 'all':
             return self.__containers.sources.local_switch.interface_manager.get_interfaces()
         elif command == 'up':
-            return self.__containers.sources.local_switch.working_interfaces.keys() if self.__containers.sources.local_switch.running else {}
+            return self.__containers.sources.local_switch.interface_manager.get_up_interfaces() if self.__containers.sources.local_switch.booted else {}
         elif command == 'down':
-            return self.__containers.sources.local_switch.interface_manager.get_keys() - self.__containers.sources.local_switch.working_interfaces.keys() if self.__containers.sources.local_switch.running else self.__containers.sources.local_switch.interface_manager.get_keys()
+            return self.__containers.sources.local_switch.interface_manager.get_down_interfaces() if self.__containers.sources.local_switch.booted else self.__containers.sources.local_switch.interface_manager.get_keys()
         else:
             return self.__containers.sources.local_switch.interface_manager.get_keys()
     

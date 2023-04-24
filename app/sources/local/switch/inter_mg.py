@@ -36,6 +36,12 @@ class InterfaceManager:
     def get_interfaces(self) -> OrderedDict:
         return self.__interface_container.interface_entry
     
+    def get_up_interfaces(self) -> list:
+        return [interface for interface in self.__interface_container.interface_entry if self.__interface_container.interface_entry[interface].state == "up"]
+
+    def get_down_interfaces(self) -> list:
+        return [interface for interface in self.__interface_container.interface_entry if self.__interface_container.interface_entry[interface].state == "down"]
+
     def get_keys(self) -> list:
         return list(self.__interface_container.interface_entry.keys())
     
