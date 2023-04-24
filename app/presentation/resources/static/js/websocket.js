@@ -6,7 +6,6 @@ socket.onopen = function(event) {
 
 socket.onmessage = function(event) {
     let data = JSON.parse(event.data);
-    console.log(data);
     if (data.type === "updatePort") {
         updatePort(data.port, data.list);
     } else if (data.type === "updateMacTable") {
