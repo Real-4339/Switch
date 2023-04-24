@@ -8,3 +8,5 @@ clears = APIRouter()
 def clear_mac():
     '''Clear MAC address table'''
     containers.core.repos.local_switch_mac.delete()
+
+    return {'message': 'MAC address table is cleared'}
