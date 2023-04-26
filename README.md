@@ -1,4 +1,4 @@
-# PowerdByIllia
+# PSIP's project
 Software Switch
 
 ## How to run:
