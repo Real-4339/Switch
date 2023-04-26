@@ -21,7 +21,7 @@ function sendSignal(event) {
 
     if (event == 'send') {
         var button = document.getElementById("changing");
-        event = button.innerHTML === "Enable sending" ? "enable" : "disable";
+        event = button.innerHTML === "Enable routing" ? "enable" : "disable";
     }
     
     fetch("/events", {
@@ -42,12 +42,12 @@ function sendSignal(event) {
         }
         if (data.enable){
             
-            button.innerHTML = "Disable sending";
+            button.innerHTML = "Disable routing";
             button.classList.remove("activation--buttons--send");
             button.classList.add("activation--buttons--disable-send");
         }
         if (data.disable){
-            button.innerHTML = "Enable sending";
+            button.innerHTML = "Enable routing";
             button.classList.remove("activation--buttons--disable-send");
             button.classList.add("activation--buttons--send");
         }
