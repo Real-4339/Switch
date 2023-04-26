@@ -18,6 +18,21 @@ function sendSignal(event) {
     let interface2Select = document.getElementById("interface2");
     let interface1Value = interface1Select.options[interface1Select.selectedIndex].value;
     let interface2Value = interface2Select.options[interface2Select.selectedIndex].value;
+
+    var button = document.getElementById("changing");
+       
+    if (button.innerHTML == "Enable sending") {
+        button.innerHTML = "Disable sending";
+        button.classList.remove("activation--buttons--send");
+        event = "disable";
+        button.classList.add("activation--buttons--disable-send");
+    } else {
+        button.innerHTML = "Enable sending";
+        button.classList.remove("activation--buttons--disable-send");
+        event = "enable";
+        button.classList.add("activation--buttons--send");
+    }
+
     fetch("/events", {
         method: "POST",
         headers: {

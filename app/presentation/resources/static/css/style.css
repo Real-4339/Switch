@@ -120,6 +120,14 @@ option {
     background-color: var(--nord-orange);
 }
 
+.activation--buttons--send {
+    background-color: var(--nord-blue2);
+}
+
+.activation--buttons--disable-send {
+    background-color: var(--nord-blue2);
+}
+
 .syslogClientSetup {
     background-color: var(--nord-night1);
     padding: 10px;
