@@ -6,7 +6,7 @@ Software Switch
 - [Upgrade.md](Upgrade.md)  
 - [Ideas.md](Ideas.md)
 
-> I also have console variant of switch in console_sw branch,  
+> I also have console variant of switch in `console_sw` branch,  
 to test
 
 ## How to run:
