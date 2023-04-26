@@ -1,8 +1,13 @@
 # PSIP's project
 Software Switch
 
->Also look on upgrade instructions in [Upgrade.md](Upgrade.md)  
-and on ideas in [Ideas.md](Ideas.md)
+> Another thing to check upgrade and ideas docs:
+
+- [Upgrade.md](Upgrade.md)  
+- [Ideas.md](Ideas.md)
+
+> I also have console variant of switch in console_sw branch,  
+to test
 
 ## How to run:
 ```bash
