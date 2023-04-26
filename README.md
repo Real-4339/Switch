@@ -1,4 +1,4 @@
-# PowerdByIllia
+# Console variant of switch
 Software Switch
 
 ## How to run:
