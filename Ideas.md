@@ -1,6 +1,6 @@
 # This file contain perspective 'good' ides that i want to implement in the project.
 
-- Add to footer console output of the program, like this:
+- Add to footer a console output of the program, like this:
 ```
 [2021-10-13 16:00:00,000] [INFO] [app.py] [main] [line: 1] [thread: 1] [pid: 1] [message: 'Program started']
 ```
