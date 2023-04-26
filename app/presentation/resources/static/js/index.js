@@ -19,20 +19,23 @@ function sendSignal(event) {
     let interface1Value = interface1Select.options[interface1Select.selectedIndex].value;
     let interface2Value = interface2Select.options[interface2Select.selectedIndex].value;
 
-    var button = document.getElementById("changing");
-       
-    if (button.innerHTML == "Enable sending") {
-        button.innerHTML = "Disable sending";
-        button.classList.remove("activation--buttons--send");
-        event = "disable";
-        button.classList.add("activation--buttons--disable-send");
-    } else {
-        button.innerHTML = "Enable sending";
-        button.classList.remove("activation--buttons--disable-send");
-        event = "enable";
-        button.classList.add("activation--buttons--send");
+    if (event == 'send') {
+        var button = document.getElementById("changing");   
+        if (button.innerHTML == "Enable sending") {
+            event = "enable";
+    
+            // button.innerHTML = "Disable sending";
+            // button.classList.remove("activation--buttons--send");
+            // button.classList.add("activation--buttons--disable-send");
+        } else {
+            event = "disable";
+            
+            // button.innerHTML = "Enable sending";
+            // button.classList.remove("activation--buttons--disable-send");
+            // button.classList.add("activation--buttons--send");
+        }
     }
-
+    
     fetch("/events", {
         method: "POST",
         headers: {
@@ -46,11 +49,26 @@ function sendSignal(event) {
     })
     .then(response => response.json())
     .then(data => {
-       if (data.interfaces){
+        if (data.interfaces){
             updateInterfaces(data.interfaces);
         }
+        if (data.enable){
+            button.innerHTML = "Disable sending";
+            button.classList.remove("activation--buttons--send");
+            button.classList.add("activation--buttons--disable-send");
+        }
+        if (data.disable){
+            button.innerHTML = "Enable sending";
+            button.classList.remove("activation--buttons--disable-send");
+            button.classList.add("activation--buttons--send");
+        }
+        if (data.error){
+            alert(data.error);
+        }
     })
-    .catch(error => console.error(error));
+    .catch(error => {
+        console.log("Error: " + error);
+    });
 }
 function resetPortInfo(port) {
     let portElement = document.getElementsByClassName("packageAnalysis--content--" + port)[0];

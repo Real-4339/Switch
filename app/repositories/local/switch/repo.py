@@ -57,6 +57,18 @@ class LocalSwitchRepo:
         elif command == 'name' and name:
             self.__containers.sources.local_switch.name = name
             return self.__containers.sources.local_switch.name
+        elif command == 'enable resending':
+            if self.__containers.sources.local_switch.running:
+                log.error('Switch is running, stop it first')
+                return {"error": "Switch is running, stop it first"}
+            else:
+                self.__containers.sources.local_switch.enable_sending()
+        elif command == 'disable resending':
+            if self.__containers.sources.local_switch.running:
+                log.error('Switch is running, stop it first')
+                return {"error": "Switch is running, stop it first"}
+            else:
+                self.__containers.sources.local_switch.disable_sending()
         else:
             raise NotImplementedError
     

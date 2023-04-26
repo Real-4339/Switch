@@ -29,3 +29,18 @@ async def set_events(event: str = Body(..., embed=True), interface1: Optional[st
 
         new_interfaces = containers.core.repos.local_switch_interface.get()
         return {"interfaces": new_interfaces}
+
+    elif event == "disable":
+        res = containers.core.repos.local_switch.update("disable resending")
+        
+        if res is not None:
+            return {'disable': 'error'}
+        
+        return {"disable": True}
+    
+    elif event == "enable":
+        res = containers.core.repos.local_switch.update("enable resending")
+        if res is not None:
+            return res
+        
+        return {"enable": True}
