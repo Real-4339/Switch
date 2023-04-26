@@ -20,20 +20,8 @@ function sendSignal(event) {
     let interface2Value = interface2Select.options[interface2Select.selectedIndex].value;
 
     if (event == 'send') {
-        var button = document.getElementById("changing");   
-        if (button.innerHTML == "Enable sending") {
-            event = "enable";
-    
-            // button.innerHTML = "Disable sending";
-            // button.classList.remove("activation--buttons--send");
-            // button.classList.add("activation--buttons--disable-send");
-        } else {
-            event = "disable";
-            
-            // button.innerHTML = "Enable sending";
-            // button.classList.remove("activation--buttons--disable-send");
-            // button.classList.add("activation--buttons--send");
-        }
+        var button = document.getElementById("changing");
+        event = button.innerHTML === "Enable sending" ? "enable" : "disable";
     }
     
     fetch("/events", {
@@ -53,6 +41,7 @@ function sendSignal(event) {
             updateInterfaces(data.interfaces);
         }
         if (data.enable){
+            
             button.innerHTML = "Disable sending";
             button.classList.remove("activation--buttons--send");
             button.classList.add("activation--buttons--disable-send");
@@ -66,9 +55,7 @@ function sendSignal(event) {
             alert(data.error);
         }
     })
-    .catch(error => {
-        console.log("Error: " + error);
-    });
+    .catch(error => console.log(error));
 }
 function resetPortInfo(port) {
     let portElement = document.getElementsByClassName("packageAnalysis--content--" + port)[0];

@@ -7,7 +7,7 @@ from app.di import containers
 
 events_router = APIRouter()
 
-@events_router.post("/events", response_model=dict[str, Union[bool, list[str]]])
+@events_router.post("/events", response_model=dict[str, Union[bool, str, list[str]]])
 async def set_events(event: str = Body(..., embed=True), interface1: Optional[str] = Body(None), 
                      interface2: Optional[str] = Body(None)):
     if event == "start":
@@ -34,7 +34,7 @@ async def set_events(event: str = Body(..., embed=True), interface1: Optional[st
         res = containers.core.repos.local_switch.update("disable resending")
         
         if res is not None:
-            return {'disable': 'error'}
+            return res
         
         return {"disable": True}
     
