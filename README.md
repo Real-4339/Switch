@@ -1,6 +1,9 @@
 # PSIP's project
 Software Switch
 
+>Also look on upgrade instructions in [Upgrade.md](Upgrade.md)  
+and on ideas in [Ideas.md](Ideas.md)
+
 ## How to run:
 ```bash
 python -m app
@@ -12,7 +15,7 @@ python -m app
 
 Autorization is required.
 
->username: **_myusername_**,
+>username: **_myusername_**,  
 password: **_mypassword_**
 
 ### State:
